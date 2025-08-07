@@ -292,6 +292,8 @@ The current list of supported models:
 |:--------------:|---------------|--------------|
 | OpenAI         | gpt-4o-2024-08-06      | --model gpt-4o-2024-08-06 |
 |                | gpt-4o-2024-05-13      | --model gpt-4o-2024-05-13 |
+|                | gpt-4o-mini            | --model gpt-4o-mini |
+|                | gpt-4.1-mini           | --model gpt-4.1-mini |
 |                | gpt-4-turbo-2024-04-09 | --model gpt-4-turbo-2024-04-09 |
 |                | gpt-4-0125-preview     | --model gpt-4-0125-preview |
 |                | gpt-4-1106-preview     | --model gpt-4-1106-preview |
