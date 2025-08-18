@@ -1,3 +1,6 @@
-[submodule "SWE-bench-docker"]
-	path = SWE-bench-docker
-	url = https://github.com/Marti2203/SWe-bench-docker
+[submodule "SWE-bench"]
+	path = SWE-bench
+	url = https://github.com/rub-sq/SWE-bench
+[submodule "ai-prompt-injection"]
+	path = ai-prompt-injection
+	url = https://github.com/rub-sq/ai-prompt-injection
