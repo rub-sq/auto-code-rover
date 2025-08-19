@@ -165,50 +165,58 @@ class OpenaiModel(Model):
                 # there is only one tool => force the model to use it
                 tool_name = tools[0]["function"]["name"]
                 tool_choice = {"type": "function", "function": {"name": tool_name}}
-                response: ChatCompletion = self.client.chat.completions.create(
-                    model=self.name,
-                    messages=messages,  # type: ignore
-                    tools=tools,  # type: ignore
-                    tool_choice=cast(ChatCompletionToolChoiceOptionParam, tool_choice),
-                    temperature=(
-                        temperature if self.name.startswith("o1") else NOT_GIVEN
-                    ),
-                    response_format=cast(ResponseFormat, {"type": response_format}),
-                    max_tokens=(
-                        self.max_output_token
-                        if not self.name.startswith("o1")
-                        else NOT_GIVEN
-                    ),
-                    max_completion_tokens=(
-                        self.max_output_token
-                        if self.name.startswith("o1")
-                        else NOT_GIVEN
-                    ),
-                    top_p=top_p,
-                    stream=False,
-                )
+                
+                # Prepare kwargs dynamically to avoid sending unsupported parameters
+                call_kwargs = {
+                    "model": self.name,
+                    "messages": messages,  # type: ignore
+                    "tools": tools,  # type: ignore
+                    "tool_choice": cast(ChatCompletionToolChoiceOptionParam, tool_choice),
+                    "response_format": cast(ResponseFormat, {"type": response_format}),
+                    "top_p": top_p,
+                    "stream": False,
+                }
+                
+                # Add temperature only for non-o1 models
+                if not self.name.startswith("o1"):
+                    call_kwargs["temperature"] = temperature
+                
+                # Add max_tokens only for non-o1 models
+                if not self.name.startswith("o1"):
+                    call_kwargs["max_tokens"] = self.max_output_token
+                
+                # Add max_completion_tokens only for o1 models  
+                if self.name.startswith("o1"):
+                    call_kwargs["max_completion_tokens"] = self.max_output_token
+                
+                response: ChatCompletion = self.client.chat.completions.create(**call_kwargs)
             else:
-                response: ChatCompletion = self.client.chat.completions.create(
-                    model=self.name,
-                    messages=messages,  # type: ignore
-                    tools=tools if tools is not None else NOT_GIVEN,  # type: ignore
-                    temperature=(
-                        temperature if self.name.startswith("o1") else NOT_GIVEN
-                    ),
-                    response_format=cast(ResponseFormat, {"type": response_format}),
-                    max_tokens=(
-                        self.max_output_token
-                        if not self.name.startswith("o1")
-                        else NOT_GIVEN
-                    ),
-                    max_completion_tokens=(
-                        self.max_output_token
-                        if self.name.startswith("o1")
-                        else NOT_GIVEN
-                    ),
-                    top_p=top_p,
-                    stream=False,
-                )
+                # Prepare kwargs dynamically to avoid sending unsupported parameters
+                call_kwargs = {
+                    "model": self.name,
+                    "messages": messages,  # type: ignore
+                    "response_format": cast(ResponseFormat, {"type": response_format}),
+                    "top_p": top_p,
+                    "stream": False,
+                }
+                
+                # Add tools only if provided
+                if tools is not None:
+                    call_kwargs["tools"] = tools  # type: ignore
+                
+                # Add temperature only for non-o1 models
+                if not self.name.startswith("o1"):
+                    call_kwargs["temperature"] = temperature
+                
+                # Add max_tokens only for non-o1 models
+                if not self.name.startswith("o1"):
+                    call_kwargs["max_tokens"] = self.max_output_token
+                
+                # Add max_completion_tokens only for o1 models
+                if self.name.startswith("o1"):
+                    call_kwargs["max_completion_tokens"] = self.max_output_token
+                
+                response: ChatCompletion = self.client.chat.completions.create(**call_kwargs)
 
             usage_stats = response.usage
             assert usage_stats is not None

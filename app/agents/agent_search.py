@@ -7,6 +7,7 @@ import re
 from collections.abc import Generator
 
 from loguru import logger
+from tenacity import RetryError
 
 from app import config
 from app.data_structures import MessageThread
