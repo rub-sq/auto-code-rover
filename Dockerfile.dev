@@ -1,0 +1,23 @@
+# autocoderover/acr:v1-dev
+FROM continuumio/miniconda3:main
+
+RUN git config --global user.email acr@autocoderover.dev
+RUN git config --global user.name acr
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y vim build-essential libssl-dev curl nano libffi-dev python3-pytest libfreetype6-dev libqhull-dev pkg-config texlive cm-super dvipng ffmpeg imagemagick fontconfig ghostscript inkscape graphviz optipng fonts-comic-neue python3-pikepdf
+
+# Create the directory where we'll mount the code
+RUN mkdir -p /opt/auto-code-rover
+
+# Set environment variables
+ENV PYTHONPATH=/opt/auto-code-rover
+
+WORKDIR /opt/auto-code-rover
+
+# Copy only the environment files to create the conda environment
+COPY environment.yml /tmp/environment.yml
+COPY requirements.txt /tmp/requirements.txt
+RUN conda env create -f /tmp/environment.yml
+
+# The actual code will be mounted as a volume at runtime
