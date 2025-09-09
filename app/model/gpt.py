@@ -159,6 +159,18 @@ class OpenaiModel(Model):
         if temperature is None:
             temperature = common.MODEL_TEMP
 
+        # Print the prompt being sent to the model
+        print(f"\n{'='*80}")
+        print(f"🤖 PROMPT SENT TO MODEL: {self.name}")
+        print(f"{'='*80}")
+        for i, message in enumerate(messages):
+            print(f"Message {i+1} ({message.get('role', 'unknown')}):")
+            print(f"{message.get('content', '')}")
+            if 'tool_calls' in message:
+                print(f"Tool calls: {message['tool_calls']}")
+            print("-" * 40)
+        print(f"{'='*80}\n")
+
         assert self.client is not None
         try:
             if tools is not None and len(tools) == 1:
