@@ -307,8 +307,10 @@ The current list of supported models:
 |                | Claude 3 Opus          | --model claude-3-opus-20240229 |
 |                | Claude 3 Sonnet        | --model claude-3-sonnet-20240229 |
 |                | Claude 3 Haiku         | --model claude-3-haiku-20240307 |
-| Meta           | Llama 3 70B            | --model llama3:70b |
+| Ollama           | Llama 3 70B            | --model llama3:70b |
 |                | Llama 3 8B             | --model llama3     |
+|                | CodeLlama 13B          | --model codellama:13b |
+|                | Qwen 14B               | --model qwen:14b |
 | AWS Bedrock    | Claude 3 Opus          | --model bedrock/anthropic.claude-3-opus-20240229-v1:0 |
 |                | Claude 3 Sonnet        | --model bedrock/anthropic.claude-3-sonnet-20240229-v1:0 |
 |                | Claude 3 Haiku         | --model bedrock/anthropic.claude-3-haiku-20240307-v1:0 |

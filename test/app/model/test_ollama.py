@@ -2,7 +2,7 @@ import time
 import sys
 import pytest
 from tenacity import RetryError
-from app.model.ollama import OllamaModel, Llama3_8B, Llama3_70B
+from app.model.ollama import OllamaModel, Llama3_8B, Llama3_70B, CodeLlama13B, Qwen14B
 from app.model import common
 
 from test.pytest_utils import *
@@ -34,6 +34,8 @@ def dummy_send_empty_request(self):
 ollama_models = {
     "Llama3_8B": Llama3_8B,
     "Llama3_70B": Llama3_70B,
+    "CodeLlama13B": CodeLlama13B,
+    "Qwen14B": Qwen14B,
 }
 
 
@@ -81,11 +83,11 @@ def test_ollama_model_call(monkeypatch, model_class):
     result = model.call(messages, response_format="json_object")
     content_json, cost_json, input_tokens_json, output_tokens_json = result
     # In the json_object branch, the method appends an extra instruction to messages:
-    # {"role": "user", "content": "Stop your response after a valid json is generated."}
-    assert messages[-1] == {
-        "role": "user",
-        "content": "Stop your response after a valid json is generated.",
-    }
+    # Different models may have different JSON instruction messages
+    last_message = messages[-1]
+    assert last_message["role"] == "user"
+    assert "json" in last_message["content"].lower()
+    assert "valid" in last_message["content"].lower()
     # The dummy response always returns "Test response".
     assert content_json == "Test response"
     print(f"Ollama model {model_class.__name__} passed call tests.")

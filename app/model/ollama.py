@@ -12,6 +12,7 @@ import ollama
 import timeout_decorator
 from ollama._types import Message, Options
 from openai.types.chat import ChatCompletionMessage
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 from app.model import common
 from app.model.common import Model
@@ -77,6 +78,7 @@ class OllamaModel(Model):
         else:
             return content
 
+    @retry(wait=wait_random_exponential(min=30, max=600), stop=stop_after_attempt(3))
     def call(
         self,
         messages: list[dict],
@@ -149,3 +151,15 @@ class Llama3_70B(OllamaModel):
     def __init__(self):
         super().__init__("llama3:70b")
         self.note = "Llama3 70B model."
+
+
+class CodeLlama13B(OllamaModel):
+    def __init__(self):
+        super().__init__("codellama:13b")
+        self.note = "CodeLlama 13B model optimized for code generation."
+
+
+class Qwen14B(OllamaModel):
+    def __init__(self):
+        super().__init__("qwen:14b")
+        self.note = "Qwen 14B model from Alibaba Cloud."
