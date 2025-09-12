@@ -2,7 +2,7 @@ import time
 import sys
 import pytest
 from tenacity import RetryError
-from app.model.ollama import OllamaModel, Llama3_8B, Llama3_70B, CodeLlama13B, Qwen14B, CodeLlama7B, Qwen7B
+from app.model.ollama import OllamaModel, Llama3_8B, Llama3_70B, CodeLlama13B, Qwen14B, CodeLlama7B, Qwen7B, DeepSeekCoder67B, DeepSeekR17B
 from app.model import common
 
 from test.pytest_utils import *
@@ -38,6 +38,8 @@ ollama_models = {
     "Qwen14B": Qwen14B,
     "CodeLlama7B": CodeLlama7B,
     "Qwen7B": Qwen7B,
+    "DeepSeekCoder67B": DeepSeekCoder67B,
+    "DeepSeekR17B": DeepSeekR17B,
 }
 
 

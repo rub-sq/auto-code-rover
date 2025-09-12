@@ -313,6 +313,8 @@ The current list of supported models:
 |                | CodeLlama 7B           | --model codellama:7b |
 |                | Qwen 14B               | --model qwen:14b |
 |                | Qwen 7B                | --model qwen:7b |
+|                | DeepSeek-Coder 6.7B    | --model deepseek-coder:6.7b |
+|                | DeepSeek-R1 7B         | --model deepseek-r1:7b |
 | AWS Bedrock    | Claude 3 Opus          | --model bedrock/anthropic.claude-3-opus-20240229-v1:0 |
 |                | Claude 3 Sonnet        | --model bedrock/anthropic.claude-3-sonnet-20240229-v1:0 |
 |                | Claude 3 Haiku         | --model bedrock/anthropic.claude-3-haiku-20240307-v1:0 |
@@ -333,7 +335,7 @@ The current list of supported models:
 
 > [!NOTE]
 > Some notes on running ACR with local Ollama models:
-> 1. Before using the Ollama models, please [install ollama](https://ollama.com/download/linux) and download the corresponding models with ollama (e.g. `ollama pull llama3`, `ollama pull codellama:7b`, `ollama pull qwen:7b`).
+> 1. Before using the Ollama models, please [install ollama](https://ollama.com/download/linux) and download the corresponding models with ollama (e.g. `ollama pull llama3`, `ollama pull codellama:7b`, `ollama pull qwen:7b`, `ollama pull deepseek-coder:6.7b`, `ollama pull deepseek-r1:7b`).
 > 2. You can run ollama server on the host machine, and ACR in its container. ACR will attempt to communicate to the ollama server on host.
 > 3. If your setup is ollama in host + ACR in its container, we recommend installing [Docker Desktop](https://docs.docker.com/desktop/) on the host, in addition to the [Docker Engine](https://docs.docker.com/engine/).
 >     - Docker Desktop contains Docker Engine, and also has a virtual machine which makes it easier to access the host ports from within a container. With Docker Desktop, this setup will work without additional effort.

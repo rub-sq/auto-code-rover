@@ -192,3 +192,15 @@ class Qwen7B(OllamaModel):
     def __init__(self):
         super().__init__("qwen:7b")
         self.note = "Qwen 7B model from Alibaba Cloud."
+
+
+class DeepSeekCoder67B(OllamaModel):
+    def __init__(self):
+        super().__init__("deepseek-coder:6.7b")
+        self.note = "DeepSeek-Coder 6.7B model specialized for code understanding and generation."
+
+
+class DeepSeekR17B(OllamaModel):
+    def __init__(self):
+        super().__init__("deepseek-r1:7b")
+        self.note = "DeepSeek-R1 7B model with advanced reasoning capabilities."
