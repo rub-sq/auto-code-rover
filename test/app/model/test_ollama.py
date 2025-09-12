@@ -2,7 +2,7 @@ import time
 import sys
 import pytest
 from tenacity import RetryError
-from app.model.ollama import OllamaModel, Llama3_8B, Llama3_70B, CodeLlama13B, Qwen14B
+from app.model.ollama import OllamaModel, Llama3_8B, Llama3_70B, CodeLlama13B, Qwen14B, CodeLlama7B, Qwen7B
 from app.model import common
 
 from test.pytest_utils import *
@@ -36,6 +36,8 @@ ollama_models = {
     "Llama3_70B": Llama3_70B,
     "CodeLlama13B": CodeLlama13B,
     "Qwen14B": Qwen14B,
+    "CodeLlama7B": CodeLlama7B,
+    "Qwen7B": Qwen7B,
 }
 
 
@@ -63,7 +65,7 @@ def test_ollama_model_call(monkeypatch, model_class):
     model = model_class()
     messages = [{"role": "user", "content": "Hello"}]
     result = model.call(messages, response_format="text")
-    # Ollama call returns a tuple: (content, 0, 0, 0)
+    # Ollama call returns a tuple: (content, cost, input_tokens, output_tokens)
     content, cost, input_tokens, output_tokens = result
     assert content == "Test response"
     assert cost == 0

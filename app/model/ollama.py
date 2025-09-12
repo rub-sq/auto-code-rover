@@ -4,6 +4,7 @@ Create all models managed by Ollama here, since they need to talk to ollama serv
 """
 
 import sys
+import time
 from collections.abc import Mapping
 from copy import deepcopy
 from typing import Literal, cast
@@ -98,6 +99,9 @@ class OllamaModel(Model):
             temperature = common.MODEL_TEMP
 
         try:
+            # Record start time for timing metrics
+            start_time = time.time()
+            
             # build up options for ollama
             options = {
                 "temperature": temperature,
@@ -133,8 +137,21 @@ class OllamaModel(Model):
             if resp_msg is None:
                 return "", 0, 0, 0
 
+            # Extract metrics from Ollama response
+            input_tokens = response.get("prompt_eval_count", 0)
+            output_tokens = response.get("eval_count", 0)
+            total_duration_ns = response.get("total_duration", 0)
+            
+            # Calculate cost (0 for local models) and log metrics
+            cost = self.calc_cost(input_tokens, output_tokens)  # Will be 0 for local models
+            
+            # Update thread cost tracking for analysis compatibility
+            common.thread_cost.process_cost += cost
+            common.thread_cost.process_input_tokens += input_tokens
+            common.thread_cost.process_output_tokens += output_tokens
+
             content: str = resp_msg.get("content", "")
-            return content, 0, 0, 0
+            return content, cost, input_tokens, output_tokens
 
         except Exception as e:
             # FIXME: catch appropriate exception from ollama
@@ -163,3 +180,15 @@ class Qwen14B(OllamaModel):
     def __init__(self):
         super().__init__("qwen:14b")
         self.note = "Qwen 14B model from Alibaba Cloud."
+
+
+class CodeLlama7B(OllamaModel):
+    def __init__(self):
+        super().__init__("codellama:7b")
+        self.note = "CodeLlama 7B model optimized for code generation."
+
+
+class Qwen7B(OllamaModel):
+    def __init__(self):
+        super().__init__("qwen:7b")
+        self.note = "Qwen 7B model from Alibaba Cloud."
