@@ -294,6 +294,7 @@ The current list of supported models:
 |                | gpt-4o-2024-05-13      | --model gpt-4o-2024-05-13 |
 |                | gpt-4o-mini            | --model gpt-4o-mini |
 |                | gpt-4.1-mini           | --model gpt-4.1-mini |
+|                | gpt-4.1-nano           | --model gpt-4.1-nano |
 |                | gpt-4-turbo-2024-04-09 | --model gpt-4-turbo-2024-04-09 |
 |                | gpt-4-0125-preview     | --model gpt-4-0125-preview |
 |                | gpt-4-1106-preview     | --model gpt-4-1106-preview |
