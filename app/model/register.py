@@ -20,6 +20,7 @@ def register_all_models() -> None:
     common.register_model(gpt.Gpt4o_mini_20240718())
     common.register_model(gpt.Gpt4o_mini())
     common.register_model(gpt.Gpt4_1_mini())
+    common.register_model(gpt.Gpt4_1_nano())
     common.register_model(gpt.Gpt4_Turbo20240409())
     common.register_model(gpt.Gpt4_0125Preview())
     common.register_model(gpt.Gpt4_1106Preview())
@@ -47,6 +48,12 @@ def register_all_models() -> None:
 
     common.register_model(ollama.Llama3_8B())
     common.register_model(ollama.Llama3_70B())
+    common.register_model(ollama.CodeLlama13B())
+    common.register_model(ollama.Qwen14B())
+    common.register_model(ollama.CodeLlama7B())
+    common.register_model(ollama.Qwen7B())
+    common.register_model(ollama.DeepSeekCoder67B())
+    common.register_model(ollama.DeepSeekR17B())
 
     common.register_model(groq.Llama3_8B())
     common.register_model(groq.Llama3_70B())

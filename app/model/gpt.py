@@ -439,3 +439,9 @@ class Gpt4_1_mini(OpenaiModel):
     def __init__(self):
         super().__init__("gpt-4.1-mini", 4096, 0.00000015, 0.0000006)
         self.note = "GPT-4.1 mini variant. Cost-effective model."
+
+
+class Gpt4_1_nano(OpenaiModel):
+    def __init__(self):
+        super().__init__("gpt-4.1-nano", 2048, 0.000000075, 0.0000003)
+        self.note = "GPT-4.1 nano variant. Ultra cost-effective model."

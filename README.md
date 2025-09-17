@@ -294,6 +294,7 @@ The current list of supported models:
 |                | gpt-4o-2024-05-13      | --model gpt-4o-2024-05-13 |
 |                | gpt-4o-mini            | --model gpt-4o-mini |
 |                | gpt-4.1-mini           | --model gpt-4.1-mini |
+|                | gpt-4.1-nano           | --model gpt-4.1-nano |
 |                | gpt-4-turbo-2024-04-09 | --model gpt-4-turbo-2024-04-09 |
 |                | gpt-4-0125-preview     | --model gpt-4-0125-preview |
 |                | gpt-4-1106-preview     | --model gpt-4-1106-preview |
@@ -307,8 +308,14 @@ The current list of supported models:
 |                | Claude 3 Opus          | --model claude-3-opus-20240229 |
 |                | Claude 3 Sonnet        | --model claude-3-sonnet-20240229 |
 |                | Claude 3 Haiku         | --model claude-3-haiku-20240307 |
-| Meta           | Llama 3 70B            | --model llama3:70b |
+| Ollama         | Llama 3 70B            | --model llama3:70b |
 |                | Llama 3 8B             | --model llama3     |
+|                | CodeLlama 13B          | --model codellama:13b |
+|                | CodeLlama 7B           | --model codellama:7b |
+|                | Qwen 14B               | --model qwen:14b |
+|                | Qwen 7B                | --model qwen:7b |
+|                | DeepSeek-Coder 6.7B    | --model deepseek-coder:6.7b |
+|                | DeepSeek-R1 7B         | --model deepseek-r1:7b |
 | AWS Bedrock    | Claude 3 Opus          | --model bedrock/anthropic.claude-3-opus-20240229-v1:0 |
 |                | Claude 3 Sonnet        | --model bedrock/anthropic.claude-3-sonnet-20240229-v1:0 |
 |                | Claude 3 Haiku         | --model bedrock/anthropic.claude-3-haiku-20240307-v1:0 |
@@ -328,8 +335,8 @@ The current list of supported models:
 > Using the Groq models on a free plan can cause the context limit to be exceeded, even on simple issues.
 
 > [!NOTE]
-> Some notes on running ACR with local models such as llama3:
-> 1. Before using the llama3 models, please [install ollama](https://ollama.com/download/linux) and download the corresponding models with ollama (e.g. `ollama pull llama3`).
+> Some notes on running ACR with local Ollama models:
+> 1. Before using the Ollama models, please [install ollama](https://ollama.com/download/linux) and download the corresponding models with ollama (e.g. `ollama pull llama3`, `ollama pull codellama:7b`, `ollama pull qwen:7b`, `ollama pull deepseek-coder:6.7b`, `ollama pull deepseek-r1:7b`).
 > 2. You can run ollama server on the host machine, and ACR in its container. ACR will attempt to communicate to the ollama server on host.
 > 3. If your setup is ollama in host + ACR in its container, we recommend installing [Docker Desktop](https://docs.docker.com/desktop/) on the host, in addition to the [Docker Engine](https://docs.docker.com/engine/).
 >     - Docker Desktop contains Docker Engine, and also has a virtual machine which makes it easier to access the host ports from within a container. With Docker Desktop, this setup will work without additional effort.
