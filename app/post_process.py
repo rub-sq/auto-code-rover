@@ -245,13 +245,29 @@ def convert_response_to_diff(
             "",
         )
 
-    # filter out edits to test files
+    # filter out edits to test files and validate file paths
     edits = []
+    placeholder_files = []
     for idx, edit in enumerate(raw_edits):
         if is_test_file(edit.filename):
             logger.debug("filtered out edit {}, which changes tests", idx)
             continue
+        
+        # Check for placeholder file paths
+        filename = edit.filename.lower()
+        if any(placeholder in filename for placeholder in ['path/to/', 'someapp/', 'example', 'a.py', 'file.py']):
+            placeholder_files.append(edit.filename)
+            logger.debug("filtered out edit {} with placeholder path: {}", idx, edit.filename)
+            continue
+            
         edits.append(edit)
+
+    if placeholder_files:
+        return (
+            ExtractStatus.RAW_PATCH_BUT_UNPARSED,
+            f"Patch contains placeholder file paths: {', '.join(placeholder_files)}. Patch must use actual project file paths.",
+            ""
+        )
 
     if not edits:
         return ExtractStatus.RAW_PATCH_BUT_UNPARSED, "No edits can be parsed.", ""
