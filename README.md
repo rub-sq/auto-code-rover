@@ -312,6 +312,7 @@ The current list of supported models:
 |                | Llama 3 8B             | --model llama3     |
 |                | CodeLlama 13B          | --model codellama:13b |
 |                | CodeLlama 7B           | --model codellama:7b |
+|                | Qwen Coder 30B         | --model qwen3-coder:30b |
 |                | Qwen 14B               | --model qwen:14b |
 |                | Qwen 7B                | --model qwen:7b |
 |                | DeepSeek-Coder 6.7B    | --model deepseek-coder:6.7b |

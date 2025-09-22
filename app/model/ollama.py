@@ -218,16 +218,21 @@ class CodeLlama13B(OllamaModel):
         self.note = "CodeLlama 13B model optimized for code generation."
 
 
-class Qwen14B(OllamaModel):
-    def __init__(self):
-        super().__init__("qwen:14b")
-        self.note = "Qwen 14B model from Alibaba Cloud."
-
-
 class CodeLlama7B(OllamaModel):
     def __init__(self):
         super().__init__("codellama:7b")
         self.note = "CodeLlama 7B model optimized for code generation."
+
+
+class QwenCoder30B(OllamaModel):
+    def __init__(self):
+        super().__init__("qwen3-coder:30b")
+        self.note = "Qwen Coder 30B model from Alibaba Cloud."
+
+class Qwen14B(OllamaModel):
+    def __init__(self):
+        super().__init__("qwen:14b")
+        self.note = "Qwen 14B model from Alibaba Cloud."
 
 
 class Qwen7B(OllamaModel):
