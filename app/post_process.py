@@ -245,24 +245,33 @@ def convert_response_to_diff(
             "",
         )
 
-    # filter out edits to test files and validate file paths
+    # filter out edits to test files and validate file paths for Ollama models
+    from app.model import common, ollama
+    
     edits = []
     placeholder_files = []
+    
+    # Configuration: Apply strict path validation only to Ollama models
+    VALIDATE_OLLAMA_PATHS = True  # Set to False to disable
+    should_validate_paths = (VALIDATE_OLLAMA_PATHS and 
+                           isinstance(common.SELECTED_MODEL, ollama.OllamaModel))
+    
     for idx, edit in enumerate(raw_edits):
         if is_test_file(edit.filename):
             logger.debug("filtered out edit {}, which changes tests", idx)
             continue
         
-        # Check for placeholder file paths
-        filename = edit.filename.lower()
-        if any(placeholder in filename for placeholder in ['path/to/', 'someapp/', 'example', 'a.py', 'file.py']):
-            placeholder_files.append(edit.filename)
-            logger.debug("filtered out edit {} with placeholder path: {}", idx, edit.filename)
-            continue
+        # Check for placeholder file paths - only for Ollama models
+        if should_validate_paths:
+            filename = edit.filename.lower()
+            if any(placeholder in filename for placeholder in ['path/to/', 'someapp/', 'example', 'a.py', 'file.py']):
+                placeholder_files.append(edit.filename)
+                logger.debug("filtered out edit {} with placeholder path: {}", idx, edit.filename)
+                continue
             
         edits.append(edit)
 
-    if placeholder_files:
+    if placeholder_files and should_validate_paths:
         return (
             ExtractStatus.RAW_PATCH_BUT_UNPARSED,
             f"Patch contains placeholder file paths: {', '.join(placeholder_files)}. Patch must use actual project file paths.",
