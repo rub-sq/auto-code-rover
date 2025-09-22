@@ -94,15 +94,6 @@ class OllamaModel(Model):
                 content = content.replace("<s>", "")
                 content = content.replace("</s>", "")
                 
-                # Enhance API guidance for search calls
-                if "search API calls" in content and "concrete arguments" in content:
-                    content += "\n\nIMPORTANT: Use actual method names and real file paths, not placeholders. Examples:\n"
-                    content += "- search_method('check_for_template_tags_with_the_same_name') NOT search_method_in_file('method', 'path/to/file.py')\n"
-                    content += "- search_code('TEMPLATES') NOT search_code('my_tags')\n"
-                    content += "- search_class('Error') NOT search_class('TemplateTag')\n"
-                    content += "Focus on the actual error message and method names from the issue description."
-                
-                # Clean up multiple whitespace and newlines
                 import re
                 content = re.sub(r'\s+', ' ', content).strip()
                 if content:  # Only add non-empty messages
@@ -112,7 +103,7 @@ class OllamaModel(Model):
                     })
         return cleaned
 
-    @retry(wait=wait_random_exponential(min=1, max=10), stop=stop_after_attempt(2))
+    @retry(wait=wait_random_exponential(min=30, max=600), stop=stop_after_attempt(3))
     def call(
         self,
         messages: list[dict],

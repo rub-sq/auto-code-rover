@@ -53,25 +53,7 @@ class SearchManager:
         search_msg_thread: MessageThread | None = None  # for typing
 
         # TODO: change the global number to be local, since it's only for search
-        # Adjust round limit for Ollama models to prevent context overload
-        from app.model import common, ollama
-        
-        # Configuration: Apply reduced rounds to ALL Ollama models (configurable)
-        OLLAMA_MAX_ROUNDS = 5  # Change this to adjust round limit for Ollama models
-        APPLY_TO_ALL_OLLAMA = True  # Set to False if you want to limit to specific models only
-        
-        def should_use_reduced_rounds(model) -> bool:
-            """Check if model should use reduced search rounds"""
-            if not isinstance(model, ollama.OllamaModel):
-                return False
-            return APPLY_TO_ALL_OLLAMA
-        
-        round_limit = config.conv_round_limit
-        if should_use_reduced_rounds(common.SELECTED_MODEL):
-            round_limit = min(OLLAMA_MAX_ROUNDS, config.conv_round_limit)  # Apply configured round limit
-            logger.info("Using reduced round limit of {} for Ollama model", round_limit)
-        
-        for round_no in range(round_limit):
+        for round_no in range(config.conv_round_limit):
             self.start_new_tool_call_layer()
 
             print_banner(f"CONTEXT RETRIEVAL ROUND {round_no}")
@@ -194,13 +176,6 @@ class SearchManager:
 
                 function = getattr(self.backend, func_name)
                 result_str, _, call_ok = function(**kwargs)
-                
-                # Check for placeholder paths and provide specific guidance
-                if not call_ok and func_name in ['search_method_in_file', 'search_class_in_file', 'search_code_in_file', 'get_code_around_line']:
-                    file_path = kwargs.get('file_path') or kwargs.get('file_name')
-                    if file_path and ('path/to/' in file_path or 'someapp' in file_path or 'example' in file_path):
-                        result_str += f"\n\nIMPORTANT: The file path '{file_path}' appears to be a placeholder. You must use ACTUAL file paths from this project. Start with broad searches like search_method('{kwargs.get('method_name', '')}') or search_code() to discover real file paths first."
-                
                 collated_search_res_str += f"Result of {api_call}:\n\n"
                 collated_search_res_str += result_str + "\n\n"
 
@@ -233,7 +208,6 @@ class SearchManager:
                 "call_ok": result,
             }
         )
-
 
     def dump_tool_call_layers_to_file(self):
         """Dump the layers of tool calls to a file."""
