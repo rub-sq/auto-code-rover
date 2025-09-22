@@ -113,14 +113,9 @@ def generator(
         reproducer_prompt += reproducer_result
         msg_thread.add_user(reproducer_prompt)
 
-    # Add enhanced guidance for Ollama models
-    select_prompt_to_use = SELECT_PROMPT
-    if isinstance(common.SELECTED_MODEL, ollama.OllamaModel):
-        select_prompt_to_use += "\n\nCRITICAL: When using APIs that require file paths (search_method_in_file, search_class_in_file, search_code_in_file, get_code_around_line), you must use ACTUAL file paths from the project, not placeholder paths like 'path/to/file.py'. Start with broad searches (search_method, search_class, search_code) to discover the real file paths first, then use specific file-based searches with the discovered paths."
+    msg_thread.add_user(SELECT_PROMPT)
 
-    msg_thread.add_user(select_prompt_to_use)
-
-    print_acr(select_prompt_to_use, "context retrieval initial prompt")
+    print_acr(SELECT_PROMPT, "context retrieval initial prompt")
 
     # TODO: figure out what should be printed to console here
     # print_acr(prompt, f"context retrieval round {start_round_no}")
@@ -158,24 +153,10 @@ def generator(
         msg_thread.add_model(res_text)
         print_retrieval(res_text, "Model response (context analysis)")
 
-        # Configuration: Apply enhanced prompts to ALL Ollama models (configurable)
-        APPLY_ENHANCED_PROMPTS_TO_ALL_OLLAMA = True  # Set to False to disable enhanced prompts
-        
-        def should_use_enhanced_prompts(model) -> bool:
-            """Check if model should use enhanced prompts"""
-            if not isinstance(model, ollama.OllamaModel):
-                return False
-            return APPLY_ENHANCED_PROMPTS_TO_ALL_OLLAMA
-        
         analyze_and_select_prompt = ANALYZE_AND_SELECT_PROMPT
-        if should_use_enhanced_prompts(common.SELECTED_MODEL):
-            # Enhanced prompts for Ollama models
+        if isinstance(common.SELECTED_MODEL, ollama.OllamaModel):
+            # llama models tend to always output search APIs and buggy locations.
             analyze_and_select_prompt += "\n\nNOTE: If you have already identified the bug locations, do not make any search API calls."
-            analyze_and_select_prompt += "\n\nIMPORTANT: When making API calls that require file paths, you MUST use concrete file paths from the project, never use placeholder paths like 'path/to/file.py' or 'someapp/file.py'. Start with broad searches first to discover actual file paths."
-            
-            # Additional guidance for Ollama models
-            if isinstance(common.SELECTED_MODEL, ollama.OllamaModel):
-                analyze_and_select_prompt += "\n\nFOR OLLAMA MODELS: Focus on finding the exact bug location quickly. If you have identified the problematic function, provide that as the bug location and STOP searching."
 
         msg_thread.add_user(analyze_and_select_prompt)
         print_acr(
