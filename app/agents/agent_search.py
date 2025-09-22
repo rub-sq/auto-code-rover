@@ -34,7 +34,6 @@ SELECT_PROMPT = (
     "\n- search_code_in_file(code_str: str, file_path: str): Search for a code snippet in a given file file."
     "\n- get_code_around_line(file_path: str, line_number: int, window_size: int): Get the code around a given line number in a file. window_size is the number of lines before and after the line number."
     "\n\nYou must give correct number of arguments when invoking API calls."
-    "\n\nCRITICAL: When using APIs that require file paths (search_method_in_file, search_class_in_file, search_code_in_file, get_code_around_line), you must use ACTUAL file paths from the project, not placeholder paths like 'path/to/file.py'. Start with broad searches (search_method, search_class, search_code) to discover the real file paths first, then use specific file-based searches with the discovered paths."
     "\n\nNote that you can use multiple search APIs in one round."
     "\n\nNow analyze the issue and select necessary APIs to get more context of the project. Each API call must have concrete arguments as inputs."
 )
@@ -114,9 +113,14 @@ def generator(
         reproducer_prompt += reproducer_result
         msg_thread.add_user(reproducer_prompt)
 
-    msg_thread.add_user(SELECT_PROMPT)
+    # Add enhanced guidance for Ollama models
+    select_prompt_to_use = SELECT_PROMPT
+    if isinstance(common.SELECTED_MODEL, ollama.OllamaModel):
+        select_prompt_to_use += "\n\nCRITICAL: When using APIs that require file paths (search_method_in_file, search_class_in_file, search_code_in_file, get_code_around_line), you must use ACTUAL file paths from the project, not placeholder paths like 'path/to/file.py'. Start with broad searches (search_method, search_class, search_code) to discover the real file paths first, then use specific file-based searches with the discovered paths."
 
-    print_acr(SELECT_PROMPT, "context retrieval initial prompt")
+    msg_thread.add_user(select_prompt_to_use)
+
+    print_acr(select_prompt_to_use, "context retrieval initial prompt")
 
     # TODO: figure out what should be printed to console here
     # print_acr(prompt, f"context retrieval round {start_round_no}")
